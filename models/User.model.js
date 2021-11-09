@@ -5,9 +5,15 @@ const userSchema = new Schema(
   {
     username: {
       type: String,
-      // unique: true -> Ideally, should be unique, but its up to you
+      unique: true, //-> Ideally, should be unique, but its up to you
     },
     password: String,
+    following: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
   },
   {
     // this second object adds extra properties: `createdAt` and `updatedAt`
