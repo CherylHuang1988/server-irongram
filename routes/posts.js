@@ -1,4 +1,5 @@
 const { Router } = require("express");
+const isLoggedIn = require("../middleware/isLoggedIn");
 const posts = [
   {
     id: "fancy",
@@ -15,7 +16,7 @@ const posts = [
 
 const router = Router();
 
-router.get("/", (req, res) => {
+router.get("/", isLoggedIn, (req, res) => {
   res.json({ posts });
 });
 
