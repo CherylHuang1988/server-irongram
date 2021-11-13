@@ -33,7 +33,7 @@ module.exports = (app) => {
   app.use(
     cors({
       // Cross Origin Resource Sharing
-      origin: ["http://localhost:3000"],
+      origin: [process.env.ORIGIN || "http://localhost:3000"],
     })
   );
 
