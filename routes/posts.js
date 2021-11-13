@@ -1,5 +1,7 @@
 const { Router } = require("express");
+const upload = require("../middleware/cloudinary");
 const isLoggedIn = require("../middleware/isLoggedIn");
+const AndrePost = require("../models/Post.model");
 const posts = [
   {
     id: "fancy",
@@ -17,21 +19,33 @@ const posts = [
 const router = Router();
 
 router.get("/", isLoggedIn, (req, res) => {
-  res.json({ posts });
+  AndrePost.find({}).then((allFilipePosts) => {
+    res.json({ posts: allFilipePosts });
+  });
 });
 
-router.get("/:id", (req, res) => {
-  const { id } = req.params;
-  const singlePost = posts.find((element) => element.id === id); // Post.findById(id).then(singlePost => {if (!singlePost) {}})
-  console.log("singlePost:", singlePost);
+router.post("/create", isLoggedIn, upload.single("juanPostPic"), (req, res) => {
+  AndrePost.create({
+    owner: req.user._id,
+    content: req.body.content,
+    image: req.file.path,
+  }).then((annasGlasses) => {
+    res.json({ post: annasGlasses });
+  });
+});
 
-  if (!singlePost) {
-    return res
-      .status(404)
-      .json({ errorMessage: `Post with the id ${id} does not exist` });
-  }
+router.get("/:mufasa", (req, res) => {
+  const { mufasa } = req.params;
 
-  res.json({ post: singlePost });
+  AndrePost.findById(mufasa).then((chrisPost) => {
+    if (!chrisPost) {
+      return res
+        .status(404)
+        .json({ errorMessage: `Post with the id ${mufasa} does not exist` });
+    }
+
+    res.json({ post: chrisPost });
+  });
 });
 
 module.exports = router;
