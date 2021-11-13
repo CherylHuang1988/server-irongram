@@ -8,6 +8,11 @@ const userSchema = new Schema(
       unique: true, //-> Ideally, should be unique, but its up to you
     },
     password: String,
+    profilePic: {
+      type: String,
+      default:
+        "https://res.cloudinary.com/dlfxinw9v/image/upload/v1621081955/rottenPotatoes/rottenPotatoesCoverPic_pd81j6.png",
+    },
     following: [
       {
         type: Schema.Types.ObjectId,
