@@ -37,15 +37,17 @@ router.post("/create", isLoggedIn, upload.single("juanPostPic"), (req, res) => {
 router.get("/:mufasa", (req, res) => {
   const { mufasa } = req.params;
 
-  AndrePost.findById(mufasa).then((chrisPost) => {
-    if (!chrisPost) {
-      return res
-        .status(404)
-        .json({ errorMessage: `Post with the id ${mufasa} does not exist` });
-    }
+  AndrePost.findById(mufasa)
+    .populate("owner")
+    .then((chrisPost) => {
+      if (!chrisPost) {
+        return res
+          .status(404)
+          .json({ errorMessage: `Post with the id ${mufasa} does not exist` });
+      }
 
-    res.json({ post: chrisPost });
-  });
+      res.json({ post: chrisPost });
+    });
 });
 
 module.exports = router;
