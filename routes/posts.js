@@ -24,6 +24,27 @@ router.get("/", isLoggedIn, (req, res) => {
   });
 });
 
+router.get("/randomPost", isLoggedIn, (req, res) => {
+  /**
+   * 1) Call the DB and get all the documents in the Posts collection
+   * 2) We select a random one
+   * 3) We retrieve the random post from the DB to the BackEnd (controller)
+   * 4) From there, we respond with a json that includes that post
+   */
+
+  AndrePost.aggregate([{ $sample: { size: 1 } }]).exec((err, randomPost) => {
+    if (err) {
+      return res.status(500).json({
+        errorMessage:
+          "Oops, something went wrong in the server, look there for more info.",
+      });
+    }
+    AndrePost.populate(randomPost, { path: "owner" }).then((populatedPost) => {
+      res.json({ post: populatedPost });
+    });
+  });
+});
+
 router.post("/create", isLoggedIn, upload.single("juanPostPic"), (req, res) => {
   AndrePost.create({
     owner: req.user._id,
