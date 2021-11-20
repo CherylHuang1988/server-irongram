@@ -71,4 +71,46 @@ router.get("/:mufasa", (req, res) => {
     });
 });
 
+router.patch("/like", isLoggedIn, (req, res) => {
+  AndrePost.findByIdAndUpdate(
+    req.body.id,
+    {
+      $addToSet: {
+        likes: req.user._id,
+      },
+    },
+    { new: true }
+  )
+    .populate("owner")
+    .then((whateverThePost) => {
+      // res.json("Hello there from the be");
+      res.json({ post: whateverThePost });
+    })
+    .catch((err) => {
+      console.error(`Err: `, err.message);
+      res.json(500).json({ errorMessage: "No post with that id" });
+    });
+});
+
+router.patch("/unlike", isLoggedIn, (req, res) => {
+  AndrePost.findByIdAndUpdate(
+    req.body.id,
+    {
+      $pull: {
+        likes: req.user._id,
+      },
+    },
+    { new: true }
+  )
+    .populate("owner")
+    .then((whateverThePost) => {
+      // res.json("Hello there from the be");
+      res.json({ post: whateverThePost });
+    })
+    .catch((err) => {
+      console.error(`Err: `, err.message);
+      res.json(500).json({ errorMessage: "No post with that id" });
+    });
+});
+
 module.exports = router;
