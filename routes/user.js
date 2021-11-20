@@ -75,6 +75,9 @@ router.post("/unfollow", isLoggedIn, (req, res) => {
 });
 
 router.get("/:thisIsNotOkay", (req, res) => {
+  // LIST OF ALL POSTS
+  // USER INFORMATION
+  // NUMBER OF FOLLOWERS
   const username = req.params.thisIsNotOkay;
 
   User.findOne({ username }).then((foundUser) => {
@@ -85,7 +88,13 @@ router.get("/:thisIsNotOkay", (req, res) => {
     }
 
     AndrePost.find({ owner: foundUser._id }).then((allPostsFromBanana) => {
-      return res.json({ user: foundUser, posts: allPostsFromBanana });
+      User.find({ following: { $in: foundUser._id } }).then((followers) => {
+        return res.json({
+          user: foundUser,
+          posts: allPostsFromBanana,
+          followers: followers.length,
+        });
+      });
     });
   });
 });
